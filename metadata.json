@@ -1,0 +1,8 @@
+{
+  "name": "The Digital Alchemist",
+  "description": "An AI-powered design synthesiser that transmutes three disparate concepts into a cohesive visual 'Vibe Card' with custom imagery, palettes, and manifestos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
