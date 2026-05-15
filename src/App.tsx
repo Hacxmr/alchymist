@@ -252,7 +252,7 @@ function VibeCard({ result }: { result: AlchemyResult }) {
         <img 
           src={result.cardImage} 
           alt={result.aestheticName}
-          className="w-full h-full object-covergrayscale-[0.2] hover:grayscale-0 transition-all duration-700"
+          className="w-full h-full object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-700"
           referrerPolicy="no-referrer"
         />
       </div>
