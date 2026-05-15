@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
-import axios from "axios";
+import { Mistral } from "@mistralai/mistralai";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -11,8 +11,10 @@ const PORT = 3000;
 
 app.use(express.json({ limit: '10mb' }));
 
-const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY;
-const MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions";
+const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY?.replace(/^["']|["']$/g, "");
+const client = new Mistral({
+  apiKey: MISTRAL_API_KEY,
+});
 
 app.get("/api/health", (req, res) => {
   res.json({
@@ -30,6 +32,9 @@ app.post("/api/alchemy", async (req, res) => {
   }
 
   try {
+    console.log("🔑 MISTRAL_API_KEY loaded:", MISTRAL_API_KEY ? `${MISTRAL_API_KEY.substring(0, 8)}...` : "NOT SET");
+    console.log("📦 Client initialized:", client ? "Yes" : "No");
+    
     if (!MISTRAL_API_KEY) {
       throw new Error("MISTRAL_API_KEY is not set");
     }
@@ -60,23 +65,14 @@ Respond with ONLY valid JSON (no markdown, no extra text):
 }`;
 
     console.log("Calling Mistral API...");
-    const response = await axios.post(
-      MISTRAL_API_URL,
-      {
-        model: "mistral-large-latest",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.7,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${MISTRAL_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await client.chat.complete({
+      model: "mistral-large-latest",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
+    });
 
     console.log("Mistral response received");
-    const content = response.data.choices[0].message.content;
+    const content = response.choices[0].message.content;
     
     // Extract JSON from response
     const jsonMatch = content.match(/\{[\s\S]*\}/);
@@ -99,7 +95,7 @@ Respond with ONLY valid JSON (no markdown, no extra text):
     res.json(parsedData);
   } catch (error: any) {
     console.error("Alchemy Error:", error.message);
-    console.error("Error details:", error.response?.data);
+    console.error("Full error:", error);
     res.status(500).json({
       error: error.message || "Failed to synthesize concepts",
       details: error.response?.data
