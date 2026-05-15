@@ -1,7 +1,17 @@
+<div align="center">
+
 # The Digital Alchemist
 ### AI-Powered Aesthetic Synthesis Engine
 
 Transform disparate concepts into cohesive visual identities, design systems, and AI-generated creative directions.
+
+<br>
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=react,vite,tailwind,nodejs,express,ts,js" />
+</p>
+
+</div>
 
 ---
 
