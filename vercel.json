@@ -2,11 +2,9 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "outputDirectory": "dist",
-  "framework": "vite",
-  "env": {
-    "MISTRAL_API_KEY": "@MISTRAL_API_KEY"
-  }
+  "framework": "vite"
 }
+
 
 
 
