@@ -64,18 +64,19 @@ Minimal dark-mode interface with:
 ## Tech Stack
 
 ### AI
-- Gemini 1.5 Flash — conceptual synthesis
-- Imagen 3 — image generation
+- Mistral AI — conceptual synthesis via `mistral-large-latest` model
+- SVG gradient generation — visual representation
 
 ### Frontend
-- React
-- Vite
-- Tailwind CSS
-- Framer Motion
+- React 19
+- Vite 6
+- Tailwind CSS 4
+- Motion (Framer Motion alternative)
 
-### Backend
-- Express.js
-- Secure Gemini proxy middleware
+### Backend / Deployment
+- Vercel Serverless Functions (`/api` directory)
+- TypeScript runtime on Node.js
+- No persistent server needed
 
 ---
 
@@ -101,15 +102,17 @@ npm install
 
 ### 3. Configure environment variables
 
-Create a `.env.local` file in the root directory:
+Create a `.env` file in the root directory:
 
 ```env
-GEMINI_API_KEY=your_api_key_here
+MISTRAL_API_KEY=your_api_key_here
 ```
 
 Get your API key from:
 
-https://aistudio.google.com/app/apikey
+https://console.mistral.ai/
+
+Leave the APP_URL variable as is (used only for deployment).
 
 ---
 
@@ -123,6 +126,72 @@ The application will run locally at:
 
 ```bash
 http://localhost:3000
+```
+
+## Project Structure
+
+```
+alchymist/
+├── src/                    # React frontend
+│   ├── App.tsx            # Main application component
+│   ├── main.tsx           # Entry point
+│   └── lib/               # Utilities
+├── api/                   # Vercel Serverless Functions
+│   ├── alchemy.ts         # Mistral AI concept synthesis
+│   └── generate-image.ts  # SVG image generation
+├── dist/                  # Build output (Vite)
+├── vite.config.ts         # Vite configuration
+├── vercel.json            # Vercel deployment config
+├── tsconfig.json          # TypeScript config
+└── package.json           # Dependencies
+```
+
+## API Endpoints
+
+### POST `/api/alchemy`
+
+Synthesize 3 concepts into an aesthetic identity.
+
+**Request:**
+```json
+{
+  "concepts": ["concept1", "concept2", "concept3"]
+}
+```
+
+**Response:**
+```json
+{
+  "aestheticName": "Neon Baroque",
+  "manifesto": "A poetic description...",
+  "imagePrompt": "A detailed image prompt...",
+  "palette": [
+    {"hex": "#FF0000", "name": "Red"},
+    ...
+  ],
+  "fonts": {
+    "display": "Font name",
+    "body": "Font name"
+  }
+}
+```
+
+### POST `/api/generate-image`
+
+Generate an SVG gradient image.
+
+**Request:**
+```json
+{
+  "prompt": "image description"
+}
+```
+
+**Response:**
+```json
+{
+  "image": "data:image/svg+xml;..."
+}
 ```
 
 ---
@@ -154,14 +223,25 @@ With additional development time, the project could expand into:
 
 ## Deployment
 
-The project can be deployed easily using:
+### Deploy on Vercel
 
-- Vercel
-- Netlify
-- Replit
-- Render
+1. Push your code to GitHub
+2. Connect your repository to [Vercel](https://vercel.com)
+3. Add environment variable in Vercel Dashboard:
+   - **Name:** `MISTRAL_API_KEY`
+   - **Value:** Your Mistral API key
+4. Deploy
+
+Vercel automatically:
+- Builds the Vite frontend
+- Sets up serverless functions from `/api` directory
+- Handles routing between frontend and API
+
+**Note:** Your Vercel deployment URL is your public app URL.
 
 ---
+
+## Philosophy
 
 ## License
 
